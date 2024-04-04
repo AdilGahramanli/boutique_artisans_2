@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('produits', function (Blueprint $table) {
-            $table->uuid('products_uuid')->primary();
+        Schema::create('products', function (Blueprint $table) {
+            $table->uuid('id')->primary();
             $table->char('name', length:45);
             $table->integer('price');
             $table->integer('weight');
@@ -21,9 +21,9 @@ return new class extends Migration
             $table->char('image_url', length:250);
             $table->integer('stock');
             $table->char('category', length:50);
-            $table->foreignUuid('shop_uuid')->constrained();
+            $table->foreignUuid('shop_id')->references('id')->on('shops');
             $table->timestamps();
-            $table->foreignId('user_id')->constrained();
+            #$table->foreignId('user_id')->constrained();
 
         });
     }

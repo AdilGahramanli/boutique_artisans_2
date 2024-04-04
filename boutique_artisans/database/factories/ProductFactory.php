@@ -25,7 +25,6 @@ class ProductFactory extends Factory
             'image_url'=>fake()->text(250),
             'stock'=>fake()->numberBetween(0, 50),
             'category'=>fake()->text(50),
-
         ];
     }
 }

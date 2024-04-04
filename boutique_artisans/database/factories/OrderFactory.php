@@ -17,7 +17,8 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-
+            'date'=>fake()->date,
+            'total'=>fake()->numberBetween(0,300)
         ];
     }
 }
