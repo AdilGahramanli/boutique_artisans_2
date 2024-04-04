@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use App\Http\Requests\StoreProduitRequest;
-use App\Http\Requests\UpdateProduitRequest;
+use App\Models\shop;
+use App\Http\Requests\StoreshopRequest;
+use App\Http\Requests\UpdateshopRequest;
 
-class ProduitController extends Controller
+class ShopController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,6 @@ class ProduitController extends Controller
     public function index()
     {
         //
-        return \App\Models\Product::all();
     }
 
     /**
@@ -28,7 +27,7 @@ class ProduitController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProduitRequest $request)
+    public function store(StoreshopRequest $request)
     {
         //
     }
@@ -36,16 +35,15 @@ class ProduitController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Product $produit)
+    public function show(shop $shop)
     {
         //
-
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $produit)
+    public function edit(shop $shop)
     {
         //
     }
@@ -53,7 +51,7 @@ class ProduitController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProduitRequest $request, Product $produit)
+    public function update(UpdateshopRequest $request, shop $shop)
     {
         //
     }
@@ -61,7 +59,7 @@ class ProduitController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $produit)
+    public function destroy(shop $shop)
     {
         //
     }
