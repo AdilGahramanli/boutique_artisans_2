@@ -15,7 +15,7 @@ return new class extends Migration
                 $table->uuid('id')->primary();
                 $table->char('name', length:42);
                 $table->text('description');
-                #$table->foreignId('user_id')->constrained();
+                $table->foreignId('user_id')->constrained();
                 #$table->foreignUuid('product_uuid')->constrained();
                 $table->timestamps();
 

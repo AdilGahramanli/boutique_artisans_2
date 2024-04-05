@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Product;
 use App\Models\shop;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,10 +15,11 @@ class ShopSeeder extends Seeder
      */
     public function run(): void
     {
-        //
-        shop::factory()
+        $user = User::all()->first();
+
+        Shop::factory()
             ->count(3)
-            ->has(Product::factory()->count(3))
+            ->recycle($user)
             ->create();
 
     }
