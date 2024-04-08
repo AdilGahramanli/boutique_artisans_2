@@ -15,6 +15,7 @@ class ProduitController extends Controller
     {
         //
         return \App\Models\Product::all();
+
     }
 
     /**
@@ -30,7 +31,9 @@ class ProduitController extends Controller
      */
     public function store(StoreProduitRequest $request)
     {
-        //
+       $product = Product::create($request->all());
+       return response()->json($product, 200);
+
     }
 
     /**
@@ -55,7 +58,7 @@ class ProduitController extends Controller
      */
     public function update(UpdateProduitRequest $request, Product $produit)
     {
-        //
+        return $produit->update();
     }
 
     /**
@@ -63,6 +66,6 @@ class ProduitController extends Controller
      */
     public function destroy(Product $produit)
     {
-        //
+        return $produit->delete();
     }
 }

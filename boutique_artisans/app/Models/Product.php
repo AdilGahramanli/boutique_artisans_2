@@ -21,7 +21,8 @@ class Product extends Model
         "description",
         "image_url",
         "stock",
-        "category"
+        "category",
+        "shop_id"
     ];
 
     // The 'shop' method defines a relationship between the Product and Shop models.

@@ -14,6 +14,7 @@ class ShopController extends Controller
     public function index()
     {
         //
+        return Shop::all();
     }
 
     /**
@@ -22,6 +23,7 @@ class ShopController extends Controller
     public function create()
     {
         //
+
     }
 
     /**
