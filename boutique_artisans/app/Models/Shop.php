@@ -15,7 +15,8 @@ class Shop extends Model
     use HasFactory, HasUuids;
     protected $fillable = [
         "name",
-        "description"
+        "description",
+        "user_id"
         ];
 
     public function products(): HasMany{

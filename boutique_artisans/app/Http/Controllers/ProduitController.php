@@ -58,7 +58,7 @@ class ProduitController extends Controller
      */
     public function update(UpdateProduitRequest $request, Product $produit)
     {
-        return $produit->update();
+        return $produit->update($request->all());
     }
 
     /**
