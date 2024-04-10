@@ -16,7 +16,6 @@ class Shop extends Model
     protected $fillable = [
         "name",
         "description",
-        "user_id"
         ];
 
     public function products(): HasMany{
