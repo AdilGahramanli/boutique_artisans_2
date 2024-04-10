@@ -18,6 +18,7 @@ class Order extends Model
 
     public function product(): BelongsTo
     {
+        //...toMany + voi many many relaionshop
         return $this->belongsTo(Product::class);
     }
 

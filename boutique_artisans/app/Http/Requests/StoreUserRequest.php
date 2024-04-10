@@ -19,7 +19,13 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'email' => 'bail|required|email',
         ];
     }
+    #public function messages()
+    #{
+       # return [
+        #    'email' => "votre mail n'est pas valide"
+       # ];
+    #}
 }

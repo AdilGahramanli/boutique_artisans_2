@@ -14,6 +14,7 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
+        // Créer les roles manuellement au lieu de factory
         Role::factory()
             ->count(1)
             ->create();

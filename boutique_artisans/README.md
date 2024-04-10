@@ -7,14 +7,16 @@
 * naviguer facilement entre différentes catégories de produits (bijoux, art, décoration, etc.).
 * fonctionnalités de recherche avancée, telles que la recherche par matériau, par artiste, ou par style.
 * un panier d'achat intuitif avec des options de personnalisation pour les produits (par exemple, choix de couleur ou de taille).
-* une mise en page artistique.
+* proposer aux artisans de personnaliser leur mise en page de manière artistique.
 * un système de gestion des utilisateurs pour les comptes clients (avec toutes les informations nécessaires à une livraison)
 
 ## Spécificités
 
 * un espace dédié aux artistes/artisans pour présenter leurs profils et leurs créations.
 * Chaque produit devra être accompagné d'une histoire ou d'une anecdote sur l'artisanat derrière sa création.
-* Derrière chaque produit il y a un artisan aussi nous souhaiterions que le visiteur du site puisse consulter une page artisan.  Chaque produit doit afficher l’artisan et le visiteur doit pouvoir accéder à sa page.  Cette page contiendra :
+* Derrière chaque produit il y a un artisan aussi nous souhaiterions que le visiteur du site puisse consulter une page artisan. 
+Chaque produit doit afficher l’artisan et le visiteur doit pouvoir accéder à sa page. 
+Cette page contiendra :
 * Des informations sur l’artisan
 * Son histoire
 * Sa manière de fabriquer les objets

@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Product extends Model
 {
     use HasFactory, HasUuids;
-    // The 'HasUuids' trait is likely a custom trait providing functionality related to UUIDs.
+    // The 'HasUuids' trait provides functionality related to UUID (insert recipe).
     protected $fillable = [
         "name",
         "price",
@@ -26,9 +26,8 @@ class Product extends Model
     ];
 
     // The 'shop' method defines a relationship between the Product and Shop models.
-    public function shop(): BelongsTo
+    public function shops(): BelongsTo
     {
-        // This product belongs to a shop.
         return $this->belongsTo(Shop::class);
     }
 
