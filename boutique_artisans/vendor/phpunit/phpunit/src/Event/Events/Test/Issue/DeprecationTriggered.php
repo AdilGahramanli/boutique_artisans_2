@@ -10,9 +10,7 @@
 namespace PHPUnit\Event\Test;
 
 use const PHP_EOL;
-use function implode;
 use function sprintf;
-use PHPUnit\Event\Code\IssueTrigger\IssueTrigger;
 use PHPUnit\Event\Code\Test;
 use PHPUnit\Event\Event;
 use PHPUnit\Event\Telemetry;
@@ -44,14 +42,13 @@ final readonly class DeprecationTriggered implements Event
     private bool $suppressed;
     private bool $ignoredByBaseline;
     private bool $ignoredByTest;
-    private IssueTrigger $trigger;
 
     /**
      * @psalm-param non-empty-string $message
      * @psalm-param non-empty-string $file
      * @psalm-param positive-int $line
      */
-    public function __construct(Telemetry\Info $telemetryInfo, Test $test, string $message, string $file, int $line, bool $suppressed, bool $ignoredByBaseline, bool $ignoredByTest, IssueTrigger $trigger)
+    public function __construct(Telemetry\Info $telemetryInfo, Test $test, string $message, string $file, int $line, bool $suppressed, bool $ignoredByBaseline, bool $ignoredByTest)
     {
         $this->telemetryInfo     = $telemetryInfo;
         $this->test              = $test;
@@ -61,7 +58,6 @@ final readonly class DeprecationTriggered implements Event
         $this->suppressed        = $suppressed;
         $this->ignoredByBaseline = $ignoredByBaseline;
         $this->ignoredByTest     = $ignoredByTest;
-        $this->trigger           = $trigger;
     }
 
     public function telemetryInfo(): Telemetry\Info
@@ -113,11 +109,6 @@ final readonly class DeprecationTriggered implements Event
         return $this->ignoredByTest;
     }
 
-    public function trigger(): IssueTrigger
-    {
-        return $this->trigger;
-    }
-
     public function asString(): string
     {
         $message = $this->message;
@@ -126,23 +117,20 @@ final readonly class DeprecationTriggered implements Event
             $message = PHP_EOL . $message;
         }
 
-        $details = [$this->test->id(), $this->trigger->asString()];
-
-        if ($this->suppressed) {
-            $details[] = 'suppressed using operator';
-        }
+        $status = '';
 
         if ($this->ignoredByTest) {
-            $details[] = 'ignored by test';
-        }
-
-        if ($this->ignoredByBaseline) {
-            $details[] = 'ignored by baseline';
+            $status = 'Test-Ignored ';
+        } elseif ($this->ignoredByBaseline) {
+            $status = 'Baseline-Ignored ';
+        } elseif ($this->suppressed) {
+            $status = 'Suppressed ';
         }
 
         return sprintf(
-            'Test Triggered Deprecation (%s)%s',
-            implode(', ', $details),
+            'Test Triggered %sDeprecation (%s)%s',
+            $status,
+            $this->test->id(),
             $message,
         );
     }

@@ -10,7 +10,6 @@
 namespace PHPUnit\Event\Test;
 
 use const PHP_EOL;
-use function implode;
 use function sprintf;
 use PHPUnit\Event\Code\Test;
 use PHPUnit\Event\Event;
@@ -111,19 +110,18 @@ final readonly class WarningTriggered implements Event
             $message = PHP_EOL . $message;
         }
 
-        $details = [$this->test->id()];
-
-        if ($this->suppressed) {
-            $details[] = 'suppressed using operator';
-        }
+        $status = '';
 
         if ($this->ignoredByBaseline) {
-            $details[] = 'ignored by baseline';
+            $status = 'Baseline-Ignored ';
+        } elseif ($this->suppressed) {
+            $status = 'Suppressed ';
         }
 
         return sprintf(
-            'Test Triggered Warning (%s)%s',
-            implode(', ', $details),
+            'Test Triggered %sWarning (%s)%s',
+            $status,
+            $this->test->id(),
             $message,
         );
     }

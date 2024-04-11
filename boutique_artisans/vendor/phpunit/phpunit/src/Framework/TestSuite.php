@@ -64,21 +64,13 @@ class TestSuite implements IteratorAggregate, Reorderable, SelfDescribing, Test
     /**
      * @psalm-var array<string,list<Test>>
      */
-    private array $groups = [];
-
-    /**
-     * @psalm-var ?list<ExecutionOrderDependency>
-     */
+    private array $groups         = [];
     private ?array $requiredTests = null;
 
     /**
      * @psalm-var list<Test>
      */
-    private array $tests = [];
-
-    /**
-     * @psalm-var ?list<ExecutionOrderDependency>
-     */
+    private array $tests             = [];
     private ?array $providedTests    = null;
     private ?Factory $iteratorFilter = null;
 
@@ -91,7 +83,6 @@ class TestSuite implements IteratorAggregate, Reorderable, SelfDescribing, Test
     }
 
     /**
-     * @psalm-param ReflectionClass<TestCase> $class
      * @psalm-param list<non-empty-string> $groups
      */
     public static function fromClassReflector(ReflectionClass $class, array $groups = []): static
@@ -315,28 +306,6 @@ class TestSuite implements IteratorAggregate, Reorderable, SelfDescribing, Test
     }
 
     /**
-     * @psalm-return list<TestCase|PhptTestCase>
-     */
-    public function collect(): array
-    {
-        $tests = [];
-
-        foreach ($this as $test) {
-            if ($test instanceof self) {
-                $tests = array_merge($tests, $test->collect());
-
-                continue;
-            }
-
-            assert($test instanceof TestCase || $test instanceof PhptTestCase);
-
-            $tests[] = $test;
-        }
-
-        return $tests;
-    }
-
-    /**
      * @throws CodeCoverageException
      * @throws Event\RuntimeException
      * @throws Exception
@@ -484,7 +453,7 @@ class TestSuite implements IteratorAggregate, Reorderable, SelfDescribing, Test
     }
 
     /**
-     * @psalm-assert-if-true class-string<TestCase> $this->name
+     * @psalm-assert-if-true class-string $this->name
      */
     public function isForTestClass(): bool
     {
@@ -492,7 +461,6 @@ class TestSuite implements IteratorAggregate, Reorderable, SelfDescribing, Test
     }
 
     /**
-     * @psalm-param ReflectionClass<TestCase> $class
      * @psalm-param list<non-empty-string> $groups
      *
      * @throws Exception

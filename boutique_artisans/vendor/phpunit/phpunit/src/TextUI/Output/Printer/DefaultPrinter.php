@@ -71,6 +71,10 @@ final class DefaultPrinter implements Printer
     {
         $this->isPhpStream = str_starts_with($out, 'php://');
 
+        if (!$this->isPhpStream && !Filesystem::createDirectory(dirname($out))) {
+            throw new DirectoryDoesNotExistException(dirname($out));
+        }
+
         if (str_starts_with($out, 'socket://')) {
             $tmp = explode(':', str_replace('socket://', '', $out));
 
@@ -87,10 +91,6 @@ final class DefaultPrinter implements Printer
             $this->isOpen = true;
 
             return;
-        }
-
-        if (!$this->isPhpStream && !Filesystem::createDirectory(dirname($out))) {
-            throw new DirectoryDoesNotExistException(dirname($out));
         }
 
         $this->stream = fopen($out, 'wb');
