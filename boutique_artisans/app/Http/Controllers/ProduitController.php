@@ -5,12 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Http\Requests\StoreProduitRequest;
 use App\Http\Requests\UpdateProduitRequest;
+use Illuminate\Auth\Middleware\Authenticate;
 
 class ProduitController extends Controller
 {
-    public function __construct(){
-        $this->middleware('auth');
-    }
     /**
      * Display a listing of the resource.
      */
@@ -27,6 +25,7 @@ class ProduitController extends Controller
     public function create()
     {
         //
+        #return \App\Models\Product::all();
     }
 
     /**
