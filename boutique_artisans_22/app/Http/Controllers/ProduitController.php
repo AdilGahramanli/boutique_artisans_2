@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Http\Requests\StoreProduitRequest;
 use App\Http\Requests\UpdateProduitRequest;
+use App\Models\Shop;
+use App\Models\User;
 use Illuminate\Auth\Middleware\Authenticate;
 
 class ProduitController extends Controller
@@ -33,7 +35,15 @@ class ProduitController extends Controller
      */
     public function store(StoreProduitRequest $request)
     {
-       $product = Product::create($request->all());
+        $user = User::first();
+        $shop = Shop::find('9bca2811-ce18-4352-9c3d-91cf415ed804');
+//       $shop = $user->shop()->find($request->shop_id);
+//       $product = Product::create($request->all());
+        $product = new Product();
+        $product->fill($request->all());
+        $product->save();
+       $shop->product->attach($product);
+
        return response()->json($product, 200);
 
     }

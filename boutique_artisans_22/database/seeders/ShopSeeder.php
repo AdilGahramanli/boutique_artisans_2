@@ -15,11 +15,10 @@ class ShopSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::all()->first();
+//        $user = User::all()->first();
 
         Shop::factory()
-            ->count(3)
-            ->recycle($user)
+            ->count(50)
             ->create();
 
     }

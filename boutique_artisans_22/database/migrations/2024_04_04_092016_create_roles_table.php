@@ -16,7 +16,7 @@ return new class extends Migration
             $table->char('name', length:45);
             $table->char('description', length:45);
             $table->timestamps();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignUuid('user_id')->constrained();
         });
     }
 

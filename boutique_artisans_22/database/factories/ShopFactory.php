@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\shop>
@@ -20,7 +21,7 @@ class ShopFactory extends Factory
         return [
             'name'=> fake()->name,
             'description' => fake()->text,
-            'user_id' => User::factory()
+            'user_id' => DB::table('users')->inRandomOrder()->first()->id,
         ];
     }
 }

@@ -24,9 +24,9 @@ return new class extends Migration
             //This method call creates a foreign key column named 'shop_id' in the current table and specifies
             // that the 'shop_id' column references the 'id' column in another table. It means that 'shop_id' is a foreign key that
             // points to the 'id' column of the referenced table.
-            $table->foreignUuid('shop_id')->references('id')->on('shops');
+//            $table->foreignUuid('id')->references('id')->
             $table->timestamps();
-            #$table->foreignId('user_id')->constrained();
+
 
         });
     }

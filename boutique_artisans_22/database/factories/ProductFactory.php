@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Shop;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
@@ -29,7 +30,7 @@ class ProductFactory extends Factory
             'image_url'=>fake()->text(250),
             'stock'=>fake()->numberBetween(0, 50),
             'category'=>fake()->text(50),
-            'shop_id' => Shop::factory()
+//            'shop_id' => DB::table("shops")->inRandomOrder()->first()->id,
         ];
     }
 }

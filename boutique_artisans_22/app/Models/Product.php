@@ -22,13 +22,12 @@ class Product extends Model
         "image_url",
         "stock",
         "category",
-        "shop_id"
     ];
 
     // The 'shop' method defines a relationship between the Product and Shop models.
-    public function shops(): BelongsTo
+    public function shops(): BelongsToMany
     {
-        return $this->belongsTo(Shop::class);
+        return $this->belongsToMany(Shop::class);
     }
 
     // The 'user' method defines a relationship between the Product and User models.
