@@ -160,7 +160,7 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
     /**
      * @psalm-var non-empty-string
      */
-    private string $methodName;
+    private string $name;
 
     /**
      * @psalm-var list<string>
@@ -220,17 +220,12 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
      * @psalm-param non-empty-string $name
      *
      * @internal This method is not covered by the backward compatibility promise for PHPUnit
-     *
-     * @final
      */
     public function __construct(string $name)
     {
-        $this->methodName = $name;
-        $this->status     = TestStatus::unknown();
+        $this->setName($name);
 
-        if (is_callable($this->sortId(), true)) {
-            $this->providedTests = [new ExecutionOrderDependency($this->sortId())];
-        }
+        $this->status = TestStatus::unknown();
     }
 
     /**
@@ -291,7 +286,7 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
         $buffer = sprintf(
             '%s::%s',
             (new ReflectionClass($this))->getName(),
-            $this->methodName,
+            $this->name,
         );
 
         return $buffer . $this->dataSetAsStringWithData();
@@ -365,7 +360,7 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
      */
     final public function nameWithDataSet(): string
     {
-        return $this->methodName . $this->dataSetAsString();
+        return $this->name . $this->dataSetAsString();
     }
 
     /**
@@ -375,7 +370,7 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
      */
     final public function name(): string
     {
-        return $this->methodName;
+        return $this->name;
     }
 
     /**
@@ -385,7 +380,7 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
     {
         return (new Groups)->size(
             static::class,
-            $this->methodName,
+            $this->name,
         );
     }
 
@@ -466,8 +461,8 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
                 $this->invokeBeforeClassHookMethods($hookMethods, $emitter);
             }
 
-            if (method_exists(static::class, $this->methodName) &&
-                MetadataRegistry::parser()->forClassAndMethod(static::class, $this->methodName)->isDoesNotPerformAssertions()->isNotEmpty()) {
+            if (method_exists(static::class, $this->name) &&
+                MetadataRegistry::parser()->forClassAndMethod(static::class, $this->name)->isDoesNotPerformAssertions()->isNotEmpty()) {
                 $this->doesNotPerformAssertions = true;
             }
 
@@ -622,6 +617,20 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
 
         if (isset($e)) {
             $this->onNotSuccessfulTest($e);
+        }
+    }
+
+    /**
+     * @psalm-param non-empty-string $name
+     *
+     * @internal This method is not covered by the backward compatibility promise for PHPUnit
+     */
+    final public function setName(string $name): void
+    {
+        $this->name = $name;
+
+        if (is_callable($this->sortId(), true)) {
+            $this->providedTests = [new ExecutionOrderDependency($this->sortId())];
         }
     }
 
@@ -837,7 +846,7 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
      */
     final public function sortId(): string
     {
-        $id = $this->methodName;
+        $id = $this->name;
 
         if (!str_contains($id, '::')) {
             $id = static::class . '::' . $id;
@@ -1170,7 +1179,7 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
         $testArguments = array_merge($this->data, array_values($this->dependencyInput));
 
         try {
-            $testResult = $this->{$this->methodName}(...$testArguments);
+            $testResult = $this->{$this->name}(...$testArguments);
         } catch (Throwable $exception) {
             if (!$this->shouldExceptionExpectationsBeVerified($exception)) {
                 throw $exception;
@@ -1246,7 +1255,7 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
             throw new Exception;
         }
 
-        $this->locale[$category] = setlocale($category, '0');
+        $this->locale[$category] = setlocale($category, 0);
 
         $result = setlocale(...$arguments);
 
@@ -1282,7 +1291,6 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
             callOriginalClone: false,
             cloneArguments: false,
             allowMockingUnknownTypes: false,
-            returnValueGeneration: self::generateReturnValuesForTestDoubles(),
         );
 
         assert($mock instanceof $originalClassName);
@@ -1302,11 +1310,7 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
      */
     final protected function createMockForIntersectionOfInterfaces(array $interfaces): MockObject
     {
-        $mock = (new MockGenerator)->testDoubleForInterfaceIntersection(
-            $interfaces,
-            true,
-            returnValueGeneration: self::generateReturnValuesForTestDoubles(),
-        );
+        $mock = (new MockGenerator)->testDoubleForInterfaceIntersection($interfaces, true);
 
         assert($mock instanceof MockObject);
 
@@ -1357,18 +1361,13 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
      */
     final protected function createPartialMock(string $originalClassName, array $methods): MockObject
     {
-        $mockBuilder = $this->getMockBuilder($originalClassName)
+        $partialMock = $this->getMockBuilder($originalClassName)
             ->disableOriginalConstructor()
             ->disableOriginalClone()
             ->disableArgumentCloning()
             ->disallowMockingUnknownTypes()
-            ->onlyMethods($methods);
-
-        if (!self::generateReturnValuesForTestDoubles()) {
-            $mockBuilder->disableAutoReturnValueGeneration();
-        }
-
-        $partialMock = $mockBuilder->getMock();
+            ->onlyMethods($methods)
+            ->getMock();
 
         Event\Facade::emitter()->testCreatedPartialMockObject(
             $originalClassName,
@@ -1654,13 +1653,13 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
      */
     private function checkRequirements(): void
     {
-        if (!$this->methodName || !method_exists($this, $this->methodName)) {
+        if (!$this->name || !method_exists($this, $this->name)) {
             return;
         }
 
         $missingRequirements = (new Requirements)->requirementsNotSatisfiedFor(
             static::class,
-            $this->methodName,
+            $this->name,
         );
 
         if (!empty($missingRequirements)) {
@@ -2477,7 +2476,6 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
             callOriginalClone: false,
             cloneArguments: false,
             allowMockingUnknownTypes: false,
-            returnValueGeneration: self::generateReturnValuesForTestDoubles(),
         );
 
         Event\Facade::emitter()->testCreatedStub($originalClassName);
@@ -2495,11 +2493,7 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
      */
     final protected static function createStubForIntersectionOfInterfaces(array $interfaces): Stub
     {
-        $stub = (new MockGenerator)->testDoubleForInterfaceIntersection(
-            $interfaces,
-            false,
-            returnValueGeneration: self::generateReturnValuesForTestDoubles(),
-        );
+        $stub = (new MockGenerator)->testDoubleForInterfaceIntersection($interfaces, false);
 
         Event\Facade::emitter()->testCreatedStubForIntersectionOfInterfaces($interfaces);
 
@@ -2528,10 +2522,5 @@ abstract class TestCase extends Assert implements Reorderable, SelfDescribing, T
         }
 
         return $o;
-    }
-
-    private static function generateReturnValuesForTestDoubles(): bool
-    {
-        return MetadataRegistry::parser()->forClass(static::class)->isDisableReturnValueGenerationForTestDoubles()->isEmpty();
     }
 }

@@ -74,7 +74,6 @@
             "tests/"
         ],
         "files": [
-            "tests/_files/deprecation-trigger/trigger_deprecation.php",
             "tests/_files/CoverageNamespacedFunctionTest.php",
             "tests/_files/CoveredFunction.php",
             "tests/_files/Generator.php",
@@ -83,7 +82,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "11.1-dev"
+            "dev-main": "11.0-dev"
         }
     }
 }

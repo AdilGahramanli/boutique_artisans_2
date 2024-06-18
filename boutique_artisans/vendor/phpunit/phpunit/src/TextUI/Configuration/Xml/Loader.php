@@ -108,8 +108,6 @@ final readonly class Loader
 
         $configurationFileRealpath = realpath($filename);
 
-        assert($configurationFileRealpath !== false && $configurationFileRealpath !== '');
-
         return new LoadedFromFileConfiguration(
             $configurationFileRealpath,
             (new Validator)->validate($document, $xsdFilename),
@@ -259,9 +257,6 @@ final readonly class Loader
         $ignoreSuppressionOfPhpNotices      = false;
         $ignoreSuppressionOfWarnings        = false;
         $ignoreSuppressionOfPhpWarnings     = false;
-        $ignoreSelfDeprecations             = false;
-        $ignoreDirectDeprecations           = false;
-        $ignoreIndirectDeprecations         = false;
 
         $element = $this->element($xpath, 'source');
 
@@ -282,26 +277,6 @@ final readonly class Loader
             $ignoreSuppressionOfPhpNotices      = $this->getBooleanAttribute($element, 'ignoreSuppressionOfPhpNotices', false);
             $ignoreSuppressionOfWarnings        = $this->getBooleanAttribute($element, 'ignoreSuppressionOfWarnings', false);
             $ignoreSuppressionOfPhpWarnings     = $this->getBooleanAttribute($element, 'ignoreSuppressionOfPhpWarnings', false);
-            $ignoreSelfDeprecations             = $this->getBooleanAttribute($element, 'ignoreSelfDeprecations', false);
-            $ignoreDirectDeprecations           = $this->getBooleanAttribute($element, 'ignoreDirectDeprecations', false);
-            $ignoreIndirectDeprecations         = $this->getBooleanAttribute($element, 'ignoreIndirectDeprecations', false);
-        }
-
-        $deprecationTriggers = [
-            'functions' => [],
-            'methods'   => [],
-        ];
-
-        foreach ($xpath->query('source/deprecationTrigger/function') as $functionNode) {
-            assert($functionNode instanceof DOMElement);
-
-            $deprecationTriggers['functions'][] = $functionNode->textContent;
-        }
-
-        foreach ($xpath->query('source/deprecationTrigger/method') as $methodNode) {
-            assert($methodNode instanceof DOMElement);
-
-            $deprecationTriggers['methods'][] = $methodNode->textContent;
         }
 
         return new Source(
@@ -321,10 +296,6 @@ final readonly class Loader
             $ignoreSuppressionOfPhpNotices,
             $ignoreSuppressionOfWarnings,
             $ignoreSuppressionOfPhpWarnings,
-            $deprecationTriggers,
-            $ignoreSelfDeprecations,
-            $ignoreDirectDeprecations,
-            $ignoreIndirectDeprecations,
         );
     }
 

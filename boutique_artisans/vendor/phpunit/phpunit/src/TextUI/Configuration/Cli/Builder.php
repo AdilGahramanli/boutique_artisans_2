@@ -10,14 +10,12 @@
 namespace PHPUnit\TextUI\CliArguments;
 
 use function array_map;
-use function array_merge;
 use function basename;
 use function explode;
 use function getcwd;
 use function is_file;
 use function is_numeric;
 use function sprintf;
-use function str_contains;
 use PHPUnit\Event\Facade as EventFacade;
 use PHPUnit\Runner\TestSuiteSorter;
 use PHPUnit\Util\Filesystem;
@@ -47,8 +45,6 @@ final class Builder
         'coverage-html=',
         'coverage-php=',
         'coverage-text==',
-        'only-summary-for-coverage-text',
-        'show-uncovered-for-coverage-text',
         'coverage-xml=',
         'path-coverage',
         'disallow-test-output',
@@ -333,17 +329,9 @@ final class Builder
                         $option[1] = 'php://stdout';
                     }
 
-                    $coverageText = $option[1];
-
-                    break;
-
-                case '--only-summary-for-coverage-text':
-                    $coverageTextShowOnlySummary = true;
-
-                    break;
-
-                case '--show-uncovered-for-coverage-text':
-                    $coverageTextShowUncoveredFiles = true;
+                    $coverageText                   = $option[1];
+                    $coverageTextShowUncoveredFiles = false;
+                    $coverageTextShowOnlySummary    = false;
 
                     break;
 
@@ -432,87 +420,27 @@ final class Builder
                     break;
 
                 case '--group':
-                    if (str_contains($option[1], ',')) {
-                        EventFacade::emitter()->testRunnerTriggeredWarning(
-                            'Using comma-separated values with --group is deprecated and will no longer work in PHPUnit 12',
-                        );
-                    }
-
-                    if ($groups === null) {
-                        $groups = [];
-                    }
-
-                    $groups = array_merge($groups, explode(',', $option[1]));
-
-                    $optionAllowedMultipleTimes = true;
+                    $groups = explode(',', $option[1]);
 
                     break;
 
                 case '--exclude-group':
-                    if (str_contains($option[1], ',')) {
-                        EventFacade::emitter()->testRunnerTriggeredWarning(
-                            'Using comma-separated values with --exclude-group is deprecated and will no longer work in PHPUnit 12',
-                        );
-                    }
-
-                    if ($excludeGroups === null) {
-                        $excludeGroups = [];
-                    }
-
-                    $excludeGroups = array_merge($excludeGroups, explode(',', $option[1]));
-
-                    $optionAllowedMultipleTimes = true;
+                    $excludeGroups = explode(',', $option[1]);
 
                     break;
 
                 case '--covers':
-                    if (str_contains($option[1], ',')) {
-                        EventFacade::emitter()->testRunnerTriggeredWarning(
-                            'Using comma-separated values with --covers is deprecated and will no longer work in PHPUnit 12',
-                        );
-                    }
-
-                    if ($testsCovering === null) {
-                        $testsCovering = [];
-                    }
-
-                    $testsCovering = array_merge($testsCovering, array_map('strtolower', explode(',', $option[1])));
-
-                    $optionAllowedMultipleTimes = true;
+                    $testsCovering = array_map('strtolower', explode(',', $option[1]));
 
                     break;
 
                 case '--uses':
-                    if (str_contains($option[1], ',')) {
-                        EventFacade::emitter()->testRunnerTriggeredWarning(
-                            'Using comma-separated values with --uses is deprecated and will no longer work in PHPUnit 12',
-                        );
-                    }
-
-                    if ($testsUsing === null) {
-                        $testsUsing = [];
-                    }
-
-                    $testsUsing = array_merge($testsUsing, array_map('strtolower', explode(',', $option[1])));
-
-                    $optionAllowedMultipleTimes = true;
+                    $testsUsing = array_map('strtolower', explode(',', $option[1]));
 
                     break;
 
                 case '--test-suffix':
-                    if (str_contains($option[1], ',')) {
-                        EventFacade::emitter()->testRunnerTriggeredWarning(
-                            'Using comma-separated values with --test-suffix is deprecated and will no longer work in PHPUnit 12',
-                        );
-                    }
-
-                    if ($testSuffixes === null) {
-                        $testSuffixes = [];
-                    }
-
-                    $testSuffixes = array_merge($testSuffixes, explode(',', $option[1]));
-
-                    $optionAllowedMultipleTimes = true;
+                    $testSuffixes = explode(',', $option[1]);
 
                     break;
 
